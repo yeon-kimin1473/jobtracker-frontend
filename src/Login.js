@@ -60,7 +60,7 @@ function Login() {
 
         <p style={{ marginTop: '16px', textAlign: 'center' }}>
           Don't have an account?{' '}
-          <a onClick={() => navigate('/register')}>Register here</a>
+          <button onClick={() => navigate('/register')}>Register here</button>
         </p>
 
       </div>
