@@ -22,7 +22,7 @@ function Dashboard() {
   }, []);
 
   const fetchJobs = () => {
-    axios.get('http://localhost:8080/api/jobs/all')
+    axios.get('https://jobtracker-backend-2p21.onrender.com/api/jobs/all')
       .then(res => setJobs(res.data))
       .catch(err => console.log(err));
   };
@@ -34,7 +34,7 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/api/jobs/add', form);
+      await axios.post('https://jobtracker-backend-2p21.onrender.com/api/jobs/add', form);
       setMessage('Job added successfully!');
       setForm({ company: '', role: '', status: 'Applied', appliedDate: '', userId: 1 });
       setShowForm(false);
@@ -46,7 +46,7 @@ function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/jobs/${id}`);
+      await axios.delete(`https://jobtracker-backend-2p21.onrender.com/api/jobs/${id}`);
       fetchJobs();
     } catch (err) {
       console.log(err);
