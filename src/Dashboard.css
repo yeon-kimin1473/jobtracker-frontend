@@ -293,3 +293,86 @@
 .status-select:focus {
     border-color: #4e9af1;
 }
+
+.predict-btn {
+    background-color: transparent;
+    border: 1px solid #4e9af1;
+    color: #4e9af1;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.predict-btn:hover {
+    background-color: #4e9af1;
+    color: white;
+}
+
+.prediction-card {
+    background-color: #16213e;
+    border: 1px solid #4e9af1;
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.prediction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.prediction-header h3 {
+    font-size: 16px;
+    color: #4e9af1;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ff4f6d;
+}
+
+.prediction-job {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 16px;
+}
+
+.predicting-text {
+    color: #4e9af1;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.prediction-result {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.score-line {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4e9af1;
+    margin-bottom: 8px;
+}
+
+.reason-line {
+    font-size: 14px;
+    color: #e0e0e0;
+    padding: 6px 10px;
+    background-color: #1a1a2e;
+    border-radius: 6px;
+    border-left: 3px solid #4e9af1;
+}

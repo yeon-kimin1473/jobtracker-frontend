@@ -8,6 +8,9 @@ function Dashboard() {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [predicting, setPredicting] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [form, setForm] = useState({
     company: '',
     role: '',
@@ -37,7 +40,7 @@ function Dashboard() {
     try {
       await axios.post('https://jobtracker-backend-2p21.onrender.com/api/jobs/add', form);
       setMessage('Job added successfully!');
-      setForm({ company: '', role: '', status: 'Applied', appliedDate: '', userId: 1 });
+      setForm({ company: '', role: '', status: 'Applied', appliedDate: '', userId: localStorage.getItem('userId') });
       setShowForm(false);
       fetchJobs();
     } catch (err) {
@@ -63,6 +66,24 @@ function Dashboard() {
     }
 };
 
+
+const handlePredict = async (job) => {
+    setSelectedJob(job);
+    setPredicting(true);
+    setPrediction(null);
+    try {
+        const res = await axios.post('https://jobtracker-backend-2p21.onrender.com/api/ai/predict', {
+            company: job.company,
+            role: job.role,
+            status: job.status,
+            appliedDate: job.appliedDate
+        });
+        setPrediction(res.data.prediction);
+    } catch (err) {
+        setPrediction('Could not get prediction. Please try again.');
+    }
+    setPredicting(false);
+};
 
 
   const filtered = jobs.filter(j =>
@@ -221,6 +242,9 @@ function Dashboard() {
     <button className="delete-btn" onClick={() => handleDelete(job.id)}>
         Delete
     </button>
+    <button className="predict-btn" onClick={() => handlePredict(job)}>
+    🤖 Predict
+</button>
 </td>
                 </tr>
               ))
@@ -228,7 +252,26 @@ function Dashboard() {
           </tbody>
         </table>
       </div>
-
+    {selectedJob && (
+    <div className="prediction-card">
+        <div className="prediction-header">
+            <h3>🤖 AI Prediction</h3>
+            <button className="close-btn" onClick={() => { setPrediction(null); setSelectedJob(null); }}>✕</button>
+        </div>
+        <p className="prediction-job">{selectedJob.company} — {selectedJob.role}</p>
+        {predicting ? (
+            <p className="predicting-text">Analyzing your application...</p>
+        ) : (
+            <div className="prediction-result">
+                {prediction && prediction.split('\n').map((line, i) => (
+                    <p key={i} className={line.startsWith('Score:') ? 'score-line' : 'reason-line'}>
+                        {line}
+                    </p>
+                ))}
+            </div>
+        )}
+    </div>
+)}
     </div>
   );
 }
