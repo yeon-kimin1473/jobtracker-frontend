@@ -13,7 +13,7 @@ function Dashboard() {
     role: '',
     status: 'Applied',
     appliedDate: '',
-    userId: 1
+    userId: localStorage.getItem('userId')
   });
   const [message, setMessage] = useState('');
 
@@ -22,10 +22,11 @@ function Dashboard() {
   }, []);
 
   const fetchJobs = () => {
-    axios.get('https://jobtracker-backend-2p21.onrender.com/api/jobs/all')
+    const userId = localStorage.getItem('userId');
+    axios.get(`https://jobtracker-backend-2p21.onrender.com/api/jobs/user/${userId}`)
       .then(res => setJobs(res.data))
       .catch(err => console.log(err));
-  };
+};
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -75,7 +76,7 @@ function Dashboard() {
       {/* Header */}
       <div className="dashboard-header">
         <h2>Job Tracker Dashboard</h2>
-        <button className="logout-btn" onClick={() => navigate('/login')}>Logout</button>
+        <button className="logout-btn" onClick={() => { localStorage.clear(); navigate('/login'); }}>Logout</button>
       </div>
 
       {/* Summary Cards */}

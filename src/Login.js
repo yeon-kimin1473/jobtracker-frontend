@@ -16,10 +16,12 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post('https://jobtracker-backend-2p21.onrender.com/api/auth/login', form);
-      setMessage(res.data);
-      if (res.data === 'Login successful') {
-        setTimeout(() => navigate('/dashboard'), 1000);
-      }
+setMessage(res.data.message);
+if (res.data.message === 'Login successful') {
+    localStorage.setItem('userId', res.data.userId);
+    localStorage.setItem('username', res.data.username);
+    setTimeout(() => navigate('/dashboard'), 1000);
+}
     } catch (err) {
       setMessage('Something went wrong. Please try again.');
     }
