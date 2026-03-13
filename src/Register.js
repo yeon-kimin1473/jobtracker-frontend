@@ -70,7 +70,7 @@ function Register() {
 
         <p style={{ marginTop: '16px', textAlign: 'center' }}>
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')}>Login here</button>
+          <span onClick={() => navigate('/login')} style={{color: '#4e9af1', cursor: 'pointer'}}>Login here</span>
         </p>
 
       </div>
