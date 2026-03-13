@@ -15,7 +15,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8080/api/auth/register', form);
+      const res = await axios.post('https://jobtracker-backend-2p21.onrender.com/api/auth/register', form);
       setMessage(res.data);
       if (res.data === 'User registered successfully') {
         setTimeout(() => navigate('/login'), 1500);

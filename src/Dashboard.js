@@ -55,7 +55,7 @@ function Dashboard() {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-        await axios.put(`http://localhost:8080/api/jobs/${id}/status?status=${newStatus}`);
+        await axios.put(`https://jobtracker-backend-2p21.onrender.com/api/jobs/${id}/status?status=${newStatus}`);
         fetchJobs();
     } catch (err) {
         console.log(err);
