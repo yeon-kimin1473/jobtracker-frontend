@@ -263,12 +263,17 @@ const handlePredict = async (job) => {
             <p className="predicting-text">Analyzing your application...</p>
         ) : (
             <div className="prediction-result">
-                {prediction && prediction.split('\n').map((line, i) => (
-                    <p key={i} className={line.startsWith('Score:') ? 'score-line' : 'reason-line'}>
-                        {line}
-                    </p>
-                ))}
-            </div>
+    {prediction && prediction.split('\n').map((line, i) => (
+        <p key={i} className={
+            line.startsWith('Match Score:') ? 'score-line' :
+            line.startsWith('Verdict:') ? 'verdict-line' :
+            line.trim() === '' ? '' :
+            'reason-line'
+        }>
+            {line}
+        </p>
+    ))}
+</div>
         )}
     </div>
 )}

@@ -368,6 +368,17 @@
     margin-bottom: 8px;
 }
 
+.verdict-line {
+    font-size: 15px;
+    font-weight: bold;
+    color: #28a745;
+    padding: 10px 14px;
+    background-color: #1a1a2e;
+    border-radius: 6px;
+    border-left: 3px solid #28a745;
+    margin-top: 6px;
+}
+
 .reason-line {
     font-size: 14px;
     color: #e0e0e0;
