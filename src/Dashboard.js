@@ -11,6 +11,9 @@ function Dashboard() {
   const [prediction, setPrediction] = useState(null);
   const [predicting, setPredicting] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [jobDescription, setJobDescription] = useState('');
+  const [pendingJob, setPendingJob] = useState(null);
   const [form, setForm] = useState({
     company: '',
     role: '',
@@ -67,16 +70,23 @@ function Dashboard() {
 };
 
 
-const handlePredict = async (job) => {
-    setSelectedJob(job);
+const handlePredict = (job) => {
+    setPendingJob(job);
+    setShowModal(true);
+    setJobDescription('');
+    setPrediction(null);
+};
+
+const handleSubmitPredict = async () => {
+    setShowModal(false);
+    setSelectedJob(pendingJob);
     setPredicting(true);
     setPrediction(null);
     try {
         const res = await axios.post('https://jobtracker-backend-2p21.onrender.com/api/ai/predict', {
-            company: job.company,
-            role: job.role,
-            status: job.status,
-            appliedDate: job.appliedDate
+            company: pendingJob.company,
+            role: pendingJob.role,
+            jobDescription: jobDescription
         });
         setPrediction(res.data.prediction);
     } catch (err) {
@@ -277,7 +287,34 @@ const handlePredict = async (job) => {
         )}
     </div>
 )}
+
+{showModal && (
+    <div className="modal-overlay">
+        <div className="modal-box">
+            <div className="modal-header">
+                <h3>📋 Paste Job Description</h3>
+                <button className="close-btn" onClick={() => setShowModal(false)}>✕</button>
+            </div>
+            <p className="modal-sub">{pendingJob.company} — {pendingJob.role}</p>
+            <textarea
+                className="jd-textarea"
+                placeholder="Paste the job description here..."
+                value={jobDescription}
+                onChange={e => setJobDescription(e.target.value)}
+                rows={8}
+            />
+            <button
+                className="btn-primary submit-btn"
+                onClick={handleSubmitPredict}
+                disabled={!jobDescription.trim()}
+            >
+                Analyze Match 🤖
+            </button>
+        </div>
     </div>
+)}
+    </div>
+
   );
 }
 
