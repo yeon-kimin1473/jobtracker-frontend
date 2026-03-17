@@ -14,6 +14,7 @@ function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [jobDescription, setJobDescription] = useState('');
   const [pendingJob, setPendingJob] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
   const [form, setForm] = useState({
     company: '',
     role: '',
@@ -82,12 +83,19 @@ const handleSubmitPredict = async () => {
     setSelectedJob(pendingJob);
     setPredicting(true);
     setPrediction(null);
+
     try {
-        const res = await axios.post('https://jobtracker-backend-2p21.onrender.com/api/ai/predict', {
-            company: pendingJob.company,
-            role: pendingJob.role,
-            jobDescription: jobDescription
-        });
+        const formData = new FormData();
+        formData.append('company', pendingJob.company);
+        formData.append('role', pendingJob.role);
+        formData.append('jobDescription', jobDescription);
+        formData.append('resume', resumeFile);
+
+        const res = await axios.post(
+            'https://jobtracker-backend-2p21.onrender.com/api/ai/predict',
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
         setPrediction(res.data.prediction);
     } catch (err) {
         setPrediction('Could not get prediction. Please try again.');
@@ -123,6 +131,10 @@ const handleSubmitPredict = async () => {
         <div className="summary-card">
           <h3>{jobs.filter(j => j.status === 'Interview').length}</h3>
           <p>Interview</p>
+        </div>
+        <div className="summary-card">
+          <h3>{jobs.filter(j => j.status === 'Waiting').length}</h3>
+          <p>Waiting</p>
         </div>
         <div className="summary-card">
           <h3>{jobs.filter(j => j.status === 'Offered').length}</h3>
@@ -175,11 +187,12 @@ const handleSubmitPredict = async () => {
               <div className="form-group">
                 <label>Status</label>
                 <select name="status" value={form.status} onChange={handleChange}>
-                  <option value="Applied">Applied</option>
-                  <option value="Interview">Interview</option>
-                  <option value="Offered">Offered</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
+                    <option value="Applied">Applied</option>
+                    <option value="Waiting">Waiting</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Offered">Offered</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
               </div>
               <div className="form-group">
                 <label>Applied Date</label>
@@ -240,15 +253,16 @@ const handleSubmitPredict = async () => {
                   <td>{job.appliedDate}</td>
                   <td className="action-cell">
     <select
-        className="status-select"
-        value={job.status}
-        onChange={(e) => handleStatusUpdate(job.id, e.target.value)}
-    >
-        <option value="Applied">Applied</option>
-        <option value="Interview">Interview</option>
-        <option value="Offered">Offered</option>
-        <option value="Rejected">Rejected</option>
-    </select>
+    className="status-select"
+    value={job.status}
+    onChange={(e) => handleStatusUpdate(job.id, e.target.value)}
+>
+    <option value="Applied">Applied</option>
+    <option value="Waiting">Waiting</option>
+    <option value="Interview">Interview</option>
+    <option value="Offered">Offered</option>
+    <option value="Rejected">Rejected</option>
+</select>
     <button className="delete-btn" onClick={() => handleDelete(job.id)}>
         Delete
     </button>
@@ -301,12 +315,22 @@ const handleSubmitPredict = async () => {
                 placeholder="Paste the job description here..."
                 value={jobDescription}
                 onChange={e => setJobDescription(e.target.value)}
-                rows={8}
+                rows={6}
             />
+            <div className="resume-upload">
+                <label>Upload Resume (PDF)</label>
+                <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={e => setResumeFile(e.target.files[0])}
+                    className="file-input"
+                />
+                {resumeFile && <p className="file-name">✅ {resumeFile.name}</p>}
+            </div>
             <button
                 className="btn-primary submit-btn"
                 onClick={handleSubmitPredict}
-                disabled={!jobDescription.trim()}
+                disabled={!jobDescription.trim() || !resumeFile}
             >
                 Analyze Match 🤖
             </button>
