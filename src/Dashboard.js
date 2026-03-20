@@ -296,7 +296,13 @@ const isDueSoon = (date) => {
                     </span>
                   </td>
                   <td>{job.appliedDate}</td>
-                  <td className="action-cell">
+<td className={isExpired(job.deadline) ? 'expired-date' : 'normal-date'}>
+    {job.deadline ? job.deadline : '—'}
+</td>
+<td className={isDueSoon(job.followUpDate) ? 'due-soon-date' : 'normal-date'}>
+    {job.followUpDate ? job.followUpDate : '—'}
+</td>
+<td className="action-cell">
     <select
     className="status-select"
     value={job.status}
