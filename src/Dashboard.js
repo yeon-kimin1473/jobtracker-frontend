@@ -20,8 +20,10 @@ function Dashboard() {
     role: '',
     status: 'Applied',
     appliedDate: '',
+    deadline: '',
+    followUpDate: '',
     userId: localStorage.getItem('userId')
-  });
+});
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -44,7 +46,15 @@ function Dashboard() {
     try {
       await axios.post('https://jobtracker-backend-2p21.onrender.com/api/jobs/add', form);
       setMessage('Job added successfully!');
-      setForm({ company: '', role: '', status: 'Applied', appliedDate: '', userId: localStorage.getItem('userId') });
+      setForm({ 
+    company: '', 
+    role: '', 
+    status: 'Applied', 
+    appliedDate: '', 
+    deadline: '',
+    followUpDate: '',
+    userId: localStorage.getItem('userId') 
+});
       setShowForm(false);
       fetchJobs();
     } catch (err) {
@@ -108,6 +118,19 @@ const handleSubmitPredict = async () => {
     j.company.toLowerCase().includes(search.toLowerCase()) ||
     j.role.toLowerCase().includes(search.toLowerCase())
   );
+
+  const isExpired = (date) => {
+    if (!date) return false;
+    return new Date(date) < new Date();
+};
+
+const isDueSoon = (date) => {
+    if (!date) return false;
+    const today = new Date();
+    const followUp = new Date(date);
+    const diff = (followUp - today) / (1000 * 60 * 60 * 24);
+    return diff >= 0 && diff <= 3;
+};
 
   return (
     <div className="dashboard-container">
@@ -205,6 +228,26 @@ const handleSubmitPredict = async () => {
                 />
               </div>
             </div>
+            <div className="form-row">
+    <div className="form-group">
+        <label>Application Deadline</label>
+        <input
+            type="date"
+            name="deadline"
+            value={form.deadline}
+            onChange={handleChange}
+        />
+    </div>
+    <div className="form-group">
+        <label>Follow Up Date</label>
+        <input
+            type="date"
+            name="followUpDate"
+            value={form.followUpDate}
+            onChange={handleChange}
+        />
+    </div>
+</div>
             <button type="submit" className="submit-btn">Add Application</button>
           </form>
         </div>
@@ -231,13 +274,15 @@ const handleSubmitPredict = async () => {
               <th>Role</th>
               <th>Status</th>
               <th>Applied Date</th>
+              <th>Deadline</th>
+              <th>Follow Up</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan="6" className="no-data">No job applications found</td>
+                <td colSpan="8" className="no-data">No job applications found</td>
               </tr>
             ) : (
               filtered.map(job => (
